@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.os.SystemClock
+import android.util.Log
 import android.widget.Button
 import android.widget.Chronometer
 
@@ -87,11 +88,36 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         //Код, выполняемый при остановке активности
+        Log.d("MainActivity", "onStop called")
         if (running) {
             saveOffset()
             stopwatch.stop()
         }
     }
+//    override fun onPause() {
+//        super.onPause()
+//        // Остановка хронометра при приостановке активности
+//        if (running) {
+//            saveOffset()
+//            stopwatch.stop()
+//        }
+//    }
+override fun onPause() {
+    super.onPause()
+    // Проверка вызова onPause
+    Log.d("MainActivity", "onPause called")
+
+    // Остановка хронометра при приостановке активности
+    if (running) {
+        saveOffset()
+        stopwatch.stop()
+        Log.d("MainActivity", "Chronometer stopped")
+    }
+}
+    //onPause() — вызывается, когда активность уходит с переднего плана, но еще может быть видна частично
+    //(например, при сворачивании приложения или открытии диалогового окна). Здесь можно остановить хронометр,
+    //так как пользователю больше не требуется взаимодействовать с ним.
+
     override fun onRestart() {
         super.onRestart()
         //Код, выполняемый при перезапуске активности
