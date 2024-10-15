@@ -67,16 +67,39 @@ class MainActivity : AppCompatActivity() {
         //Кнопка reset обнуляет offset и базовое время
         val resetButton = findViewById<Button>(R.id.reset_button)
         resetButton.setOnClickListener {
+            if (running) {    //добавила остановку таймера, потому что...
+                saveOffset()
+                stopwatch.stop()
+                running = false
+            }
             offset = 0
             setBaseTime()
         }
     }
+
     //Сохранение свойств
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putLong(OFFSET_KEY, offset)
         savedInstanceState.putBoolean(RUNNING_KEY, running)
         savedInstanceState.putLong(BASE_KEY, stopwatch.base)
         super.onSaveInstanceState(savedInstanceState)
+    }
+    override fun onStop() {
+        super.onStop()
+        //Код, выполняемый при остановке активности
+        if (running) {
+            saveOffset()
+            stopwatch.stop()
+        }
+    }
+    override fun onRestart() {
+        super.onRestart()
+        //Код, выполняемый при перезапуске активности
+        if (running) {
+            setBaseTime()
+            stopwatch.start()
+            offset = 0
+        }
     }
 
     //Обновляет время stopwatch.base
